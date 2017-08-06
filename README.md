@@ -16,6 +16,10 @@ curl -v -X POST -H "Content-Type: text/plain" -d "[51.1, 30.2; 64.91, 51.67; 70.
 > POST /clustering/labels?num_clusters=4&max_iterations=300 HTTP/1.1
 > Content-Type: text/plain
 > Content-Length: 51
+[51.1, 30.2;
+64.91, 51.67;
+70.45, 68.7;
+61.9, 45.2]
 ```
 
 Response
