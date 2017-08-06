@@ -8,8 +8,14 @@ def euclidean_distance(x1: np.ndarray, x2: np.ndarray):
 
 def initial_centers(X, n_clusters):
     """
-    Implementation for advanced algorithm for choosing initial centroids
+    Implementation of advanced (in compare with random) algorithm for choosing initial centroids
     k-means++ (http://ilpubs.stanford.edu:8090/778/1/2006-13.pdf)
+
+    Steps:
+        1. Choose first point randomly
+        2. Calculate for every point distance to closest center
+        3. Select new center with probability proportional to this distances
+        4. Repeat 2-3 until all centers selected
     """
     points_count = X.shape[0]
 
@@ -22,6 +28,7 @@ def initial_centers(X, n_clusters):
         prob = np.array([min(euclidean_distance(X[i], X[c]) for c in centers) for i in range(points_count)])
         prob = prob * prob
         prob /= np.sum(prob)
+
         centers.append(np.random.choice(points_count, p=prob))
 
     return X[centers]
@@ -49,6 +56,15 @@ def find_centroids(X, labels, n_clusters):
 
 
 def k_means(X, n_clusters=4, max_iterations=300, convergence_threshold=1e-4, init=None):
+    """
+    Clustering algorithm with predefined amount of clusters (n_clusters)
+    Steps:
+        1. Choose initial centers or use predefined (:type init: np.array[Point]
+                                                     :type Point: 1-d np.array)
+        2. Calculate labels with respect to current selected centers
+        3. Select new centers in labeled clusters
+        4. Repeat 2,3 until centers converge or loop reach max_iterations
+    """
     centers = previous_centers = initial_centers(X, n_clusters) if init is None else init
 
     for _ in range(max_iterations):

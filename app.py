@@ -1,5 +1,5 @@
 import numpy as np
-from flask import Flask, request, abort
+from flask import Flask, request, abort, make_response
 
 from model import k_means
 
@@ -31,10 +31,12 @@ def clustering():
     labels = k_means(points, n_clusters, max_iterations)
     labels += 1  # normalize labels to begin from 1
 
-    return '[{}]'.format(';\n'.join(
+    response = make_response('[{}]'.format(';\n'.join(
         ', '.join(f'{x}' for x in list(row) + list(label))
         for row, label in zip(points, labels))
-    )
+    ))
+    response.headers['Content-Type'] = 'text/plain; charset=utf-8'
+    return response
 
 
 def parse_input(data: str):
